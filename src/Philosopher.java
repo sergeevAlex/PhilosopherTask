@@ -1,9 +1,8 @@
 import java.util.concurrent.Semaphore;
-
 public class Philosopher implements Runnable {
 
-    private final static int EATING_TIME = 100;
-    private final static int THINKING_TIME = 100;
+    private final static int EATING_TIME = 1000;
+    private final static int THINKING_TIME = 1000;
     private final static int NUMBER_OF_MEALS = 5;
 
     private int ID;
@@ -24,12 +23,12 @@ public class Philosopher implements Runnable {
     }
 
     public void printLog(String message){
-        System.out.println("Philosopher" + ID + message);
+        System.out.println("Philosopher " + ID + " " + message);
     }
 
 
     @Override
-    public void run() {
+    public synchronized void run() {
         while(counter < NUMBER_OF_MEALS){
             eat();
             think();
@@ -38,8 +37,9 @@ public class Philosopher implements Runnable {
     }
 
     public void think(){
-        printLog("is thinking");
         s.release();
+        printLog("is thinking");
+
         try {
             Thread.sleep(THINKING_TIME);
         } catch (InterruptedException e) {
@@ -48,9 +48,9 @@ public class Philosopher implements Runnable {
     }
 
     public void eat(){
-        printLog("is eating");
         try {
             s.acquire();
+            printLog("is eating");
             Thread.sleep(EATING_TIME);
             counter++;
         } catch (InterruptedException e) {
