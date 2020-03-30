@@ -6,7 +6,7 @@ public class Main {
 
         Semaphore sm = new Semaphore(2);
 
-        for(int i =0;i < 5;i++){
+        for(int i =0;i < 5; i++){
             new Thread(new Philosopher(sm,i)).start();
         }
 
